@@ -33,6 +33,16 @@ pub fn part_1(input: String) {
   |> string.inspect
 }
 
+pub fn part_2(input: String) {
+  input
+  |> string.split("\n")
+  |> list.map(parse_game)
+  |> list.map(get_smaller_set_possible)
+  |> list.map(fn(set) { set.red * set.blue * set.green })
+  |> int.sum
+  |> string.inspect
+}
+
 fn is_possible_game(game: Game, reference: Set) -> Bool {
   game.sets
   |> list.all(fn(set) {
@@ -42,8 +52,14 @@ fn is_possible_game(game: Game, reference: Set) -> Bool {
   })
 }
 
-pub fn part_2(_input: String) {
-  "todo"
+fn get_smaller_set_possible(game: Game) -> Set {
+  list.fold(over: game.sets, from: Set(0, 0, 0), with: fn(mins, set) {
+    Set(
+      red: int.max(mins.red, set.red),
+      blue: int.max(mins.blue, set.blue),
+      green: int.max(mins.green, set.green),
+    )
+  })
 }
 
 fn parse_game(line: String) -> Game {
